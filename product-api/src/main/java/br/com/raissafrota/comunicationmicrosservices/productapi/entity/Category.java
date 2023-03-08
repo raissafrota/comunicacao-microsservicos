@@ -1,6 +1,6 @@
 package br.com.raissafrota.comunicationmicrosservices.productapi.entity;
 
-import br.com.raissafrota.comunicationmicrosservices.productapi.dto.request.CategoryRequestDto;
+import br.com.raissafrota.comunicationmicrosservices.productapi.dto.request.CategoryRequest;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -26,7 +26,7 @@ public class Category {
     @Column(name = "description", nullable = false)
     private String description;
 
-    public static Category of(CategoryRequestDto request) {
+    public static Category of(CategoryRequest request) {
         var category = new Category();
         BeanUtils.copyProperties(request, category);
         return category;

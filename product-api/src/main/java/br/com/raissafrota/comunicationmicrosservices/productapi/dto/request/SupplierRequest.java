@@ -3,7 +3,7 @@ package br.com.raissafrota.comunicationmicrosservices.productapi.dto.request;
 import lombok.Data;
 
 @Data
-public class CategoryRequestDto {
+public class SupplierRequest {
 
-    private String description;
+    private String name;
 }
