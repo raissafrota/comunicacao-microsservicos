@@ -1,5 +1,6 @@
 package br.com.raissafrota.comunicationmicrosservices.productapi.entity;
 
+import br.com.raissafrota.comunicationmicrosservices.productapi.dto.request.CategoryRequestDto;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,6 +10,7 @@ import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.BeanUtils;
 
 @Data
 @AllArgsConstructor
@@ -23,4 +25,10 @@ public class Category {
 
     @Column(name = "description", nullable = false)
     private String description;
+
+    public static Category of(CategoryRequestDto request) {
+        var category = new Category();
+        BeanUtils.copyProperties(request, category);
+        return category;
+    }
 }
