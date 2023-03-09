@@ -7,6 +7,8 @@ import br.com.raissafrota.comunicationmicrosservices.productapi.dto.response.Pro
 import br.com.raissafrota.comunicationmicrosservices.productapi.entity.Product;
 import br.com.raissafrota.comunicationmicrosservices.productapi.exception.ValidationException;
 import br.com.raissafrota.comunicationmicrosservices.productapi.repository.ProductRepository;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,64 @@ public class ProductService {
     private SupplierService supplierService;
     @Autowired
     private CategoryService categoryService;
+
+    public List<ProductResponse> findAll() {
+        return repository
+                .findAll()
+                .stream()
+                .map(ProductResponse::of)
+                .collect(Collectors.toList());
+    }
+
+    public ProductResponse findByIdResponse(Integer id) {
+        return ProductResponse.of(findById(id));
+    }
+
+    public Product findById(Integer id) {
+        validateInformedId(id);
+        return repository
+                .findById(id)
+                .orElseThrow(() -> new ValidationException("There's no product for the given ID."));
+    }
+
+    public List<ProductResponse> findByName(String name) {
+        if (isEmpty(name)) {
+            throw new ValidationException("The product name must be informed.");
+        }
+        return repository
+                .findByNameIgnoreCaseContaining(name)
+                .stream()
+                .map(ProductResponse::of)
+                .collect(Collectors.toList());
+    }
+
+    public List<ProductResponse> findBySupplierId(Integer supplierId) {
+        if (isEmpty(supplierId)) {
+            throw new ValidationException("The product' supplier ID name must be informed.");
+        }
+        return repository
+                .findBySupplierId(supplierId)
+                .stream()
+                .map(ProductResponse::of)
+                .collect(Collectors.toList());
+    }
+
+    public List<ProductResponse> findByCategoryId(Integer categoryId) {
+        if (isEmpty(categoryId)) {
+            throw new ValidationException("The product' category ID name must be informed.");
+        }
+        return repository
+                .findByCategoryId(categoryId)
+                .stream()
+                .map(ProductResponse::of)
+                .collect(Collectors.toList());
+    }
+
+    private void validateInformedId(Integer id) {
+        if (isEmpty(id)) {
+            throw new ValidationException("The supplier ID must be informed.");
+        }
+    }
 
     public ProductResponse save(ProductRequest request) {
         validateProductDataInformed(request);
@@ -51,4 +111,5 @@ public class ProductService {
             throw new ValidationException("The supplier ID was not informed.");
         }
     }
+
 }
